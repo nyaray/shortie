@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  # dev
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+  shortie:
+    image: shortie
+    restart: always
+    ports:
+      - 8080:4000
+    environment:
+      DATABASE_URL: "ecto://postgres:postgres@localhost/shortie_prod"
+      SECRET_KEY_BASE: "vlOtp5y2jJOuMXbYZGaSmeXcHNAMJ8cRJva24Oml61ZEzLABV+9O7805HlMIwrr3"

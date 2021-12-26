@@ -1,0 +1,1 @@
+call "%~dp0\shortie" eval Shortie.Release.migrate
