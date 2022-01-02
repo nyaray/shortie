@@ -8,7 +8,12 @@
 import Config
 
 config :shortie,
-  ecto_repos: [Shortie.Repo]
+  env: Mix.env()
+
+# Configures Elixir's Logger
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:request_id]
 
 # Configures the endpoint
 config :shortie, ShortieWeb.Endpoint,
@@ -17,13 +22,21 @@ config :shortie, ShortieWeb.Endpoint,
   pubsub_server: Shortie.PubSub,
   live_view: [signing_salt: "avHgzkcf"]
 
-# Configures Elixir's Logger
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
-
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# Configure repos
+config :shortie,
+  ecto_repos: [Shortie.Repo]
+
+# Configure hashids into ecto for shorties
+config :ecto_hashids,
+  prefix_separator: "_",
+  characters: "0123456789abcdefghjkmnpqrstvwxyz",
+  salt: "3acad842-06c2-48a3-9851-e2f5675ac901",
+  prefix_descriptions: %{
+    l: Link
+  }
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

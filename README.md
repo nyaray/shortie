@@ -8,33 +8,20 @@ This is the world in which shortie was born.
 ## Requirements
 
 To run shortie, you need to have
-[Docker](https://www.docker.com/products/docker-desktop/alternatives) installed.
-<!--In order to also run shortie's dependencies you will be needing [Docker
-Compose](https://docs.docker.com/compose/install/#prerequisites), which
-coordinates starting up shortie and its dependencies.-->
-
-### Developing locally
-
-If you want to run things in your native OS environment, we suggest that you use
-[ASDF to install and manage your language
-versions](https://elixir-lang.org/install.html#compiling-with-version-managers)
-as it can be somewhat tedious to do so manually, over time.
+[Docker](https://www.docker.com/products/docker-desktop/alternatives) installed
+as well as have set up a swarm, in order to run the stack of applications (the
+app itself and the database used to store its data).
 
 ## Building
 
-To run locally, you can `cd` into the top-level `app` directory of the project
-and run `docker build -t shortie .`, which will build and register the docker
-image locally. To run it, `cd` back to the project-top level and run `docker
-stack deploy -c stack.yml shortie`. Note that you might need to run `docker
-swarm init` to create a local swarm for running the Docker stack used by this
-project.
-
-That's it! You're ready to save time and share memes and important links quickly!
+To build shortie you need to build two docker images and deploy a docker stack,
+which you can do by running `./build.sh`. The docker stack will run shortie and
+a postgres-instance for persistent storage.
 
 ## Running shortie
 
-Now that you've built your image you can run it with `docker run -d -p 1337:4000
-shortie` to serve up the shortie page on port 1337 on any network interface you
-might have on your system. Note that you can change 1337 to whatever you want,
-but that you'll need to be root (on UNIX-like systems) to be able to bind to
-ports in the 1-1023 range.
+To run shortie, run `./run.sh` from the project root-directory.
+
+Note that you might need to run `docker swarm init` to create a local swarm for
+running the Docker stack used by this project if you don't already have swarm
+set up.

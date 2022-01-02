@@ -14,17 +14,6 @@ defmodule ShortieWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", ShortieWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-  end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ShortieWeb do
-  #   pipe_through :api
-  # end
-
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
@@ -41,4 +30,19 @@ defmodule ShortieWeb.Router do
       live_dashboard "/dashboard", metrics: ShortieWeb.Telemetry
     end
   end
+
+ scope "/", ShortieWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+    get "/:slug", PageController, :resolve
+
+    post "/", PageController, :create
+  end
+
+  # Other scopes may use custom stacks.
+  # scope "/api", ShortieWeb do
+  #   pipe_through :api
+  # end
+
 end

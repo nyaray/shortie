@@ -1,5 +1,4 @@
-/* This file is for your main application CSS */
-@import "./phoenix.css";
+@import "./layout.css";
 
 /* Alerts and form errors used by phx.new */
 .alert {
@@ -33,4 +32,85 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+}
+
+#saved-url-copy.copied {
+  background-color: #00d969;
+}
+
+/* Content blocks */
+
+.header-dev-mode > section > *,
+.shorties > h3,
+.shortie-item,
+.pitch {
+  padding: 0 20px;
+}
+
+.pitch .column {
+  padding: 0;
+}
+
+/* Shortie */
+
+.shortie-form-controls {
+  display: flex;
+  padding: 20px;
+}
+
+.shortie-form-controls input {
+  flex-grow: 1;
+}
+
+.shortie-form-controls button[type=submit] {
+  margin-left: 30px;
+}
+
+.shortie-form .card {
+  padding: 10px 20px 0;
+}
+
+.shortie-form .save-error.card {
+  background-color: #f2dede;
+}
+
+.shortie-form .card .invalid-feedback {
+  display: list-item;
+  margin-left: 20px;
+}
+
+.shortie-item {
+  width: 100%;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  background-color: #fcf8e3;
+}
+
+.shortie-link,
+.shortie-target {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shortie-item > .shortie-creation {
+  float: right;
+}
+
+/* Footer */
+
+.pitch {
+  margin: 30px 0 30px;
+}
+
+.pitch p {
+  /* max-width: 400px; */
+  margin-right: 30px;
+}
+
+.business-card {
+  background-color: #d9edf7;
+  padding: 2rem;
 }

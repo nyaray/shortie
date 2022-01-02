@@ -1,41 +1,72 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>Peace of mind from prototype to production</p>
+<a href="/">
+<section class="hero">
+  <h1><%= gettext "What do you want to share %{when}?", when: "today"%></h1>
+  <p>Sharing is caring.</p>
 </section>
+</a>
 
 <section class="row">
   <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.6/CHANGELOG.md">v1.6 Changelog</a>
-      </li>
-    </ul>
+    <%= form_for @changeset, Routes.page_path(@conn, :create), [class: "shortie-form"], fn f -> %>
+      <% 
+        url_errors = Keyword.get_values(f.errors, :url) 
+        has_url_errors = length(url_errors) > 0
+      %>
+
+      <div class="shortie-form-controls">
+        <%= text_input f, :url, placeholder: "http://your-url.com/here" %>
+        <%= submit "Submit" %>
+      </div>
+
+      <%= if assigns[:saved_link] do %>
+      <div class="save-success card">
+        <h3>Saved!</h3>
+        <%= link to: (URI.parse(@saved_link.page_url)), id: "page_url", target: "_blank" do %><%= @saved_link.page_url %><% end %>
+        <button id="saved-url-copy">Copy</button>
+      </div>
+      <% end %>
+
+      <%= if has_url_errors do %>
+      <div class="save-error card">
+        <h3>Link not saved!</h3>
+
+        Your url could not be saved:
+        <div><%= error_tag(f, :url) %></div>
+      </div>
+      <% end %>
+    <% end %>
+  </article>
+</section>
+
+<section class="row">
+  <article class="column shorties">
+    <h3>10 Latest Links</h3>
+
+    <%= for l <- @links do %>
+    <div class="shortie-item"><% url = l.page_url %>
+      <div class="shortie-creation"><em>Created <%= l.inserted_at.year %>/<%= l.inserted_at.month %>/<%= l.inserted_at.day %></em></div>
+      <div class="shortie-link"><%= link to: (url), target: "_blank" do %><%= url %><% end %></div>
+      <div class="shortie-target"><%= content_tag(:span, l.target_url, title: l.target_url) %></div>
+    </div>
+    <% end %>
+  </article>
+</section>
+
+<section class="pitch row">
+  <article class="column">
+    <h2>Missing a feature?</h2>
+    <p>Have a business card and reach out to us about the possibilities of hiring a fullstack (among other things) elixir developer.</p>
   </article>
   <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://web.libera.chat/#elixir">#elixir on Libera Chat (IRC)</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-      <li>
-        <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
-      </li>
-      <li>
-        <a href="https://discord.gg/elixir">Elixir on Discord</a>
-      </li>
-    </ul>
+    <div class="business-card">
+      <strong>Emilio Nyaray Valenzuela</strong>
+      <div>Software Engineer</div>
+      <address>
+        Email: <a href="mailto:emilio@nyaray.com">emilio@nyaray.com</a><br />
+        Phone: <a href="tel:+46768402136">+46 (0)76 840 21 36 (Sweden)</a><br />
+        LinkedIn: <a href="http://linkedin.com/in/nyaray">LinkedIn</a><br />
+        YouTube: <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Presentation</a>
+      </address>
+    </div>
   </article>
 </section>

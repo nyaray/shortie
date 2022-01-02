@@ -7,6 +7,9 @@ defmodule Shortie.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
+      elixirc_options: [
+        # warnings_as_errors: true
+      ],
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -46,7 +49,9 @@ defmodule Shortie.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:hashids, "~> 2.0"},
+      {:ecto_hashids, "~> 0.0.1"}
     ]
   end
 

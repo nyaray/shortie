@@ -30,6 +30,9 @@ msgstr ""
 msgid "has invalid format"
 msgstr ""
 
+msgid "url not properly formatted"
+msgstr "URLs should start with either \"https://\" or \"http://\"."
+
 ## From Ecto.Changeset.validate_subset/3
 msgid "has an invalid entry"
 msgstr ""
