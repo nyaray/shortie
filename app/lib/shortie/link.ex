@@ -30,6 +30,11 @@ defmodule Shortie.Links.Link do
     |> validate_url(:url)
   end
 
+  def empty_changeset() do
+    %Shortie.Links.Link{}
+    |> Ecto.Changeset.cast(%{}, [])
+  end
+
   def external_id(<< "l_"::utf8, hashid::binary >>), do: hashid
 
   #

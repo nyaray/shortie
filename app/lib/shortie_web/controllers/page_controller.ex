@@ -37,15 +37,7 @@ defmodule ShortieWeb.PageController do
 
   defp get_recent_links(conn) do
     Shortie.Links.list_recent_links()
-    |> Enum.map(fn l -> %{ id: l.id, inserted_at: l.inserted_at, target_url: l.url } end)
-    |> Enum.map(fn l -> add_page_url(conn, l) end)
-  end
-
-  defp add_page_url(conn, link) do
-    eid = external_id(link.id)
-    eurl = external_url(conn, eid)
-
-    Map.put link, :page_url, eurl
+    |> Enum.map(fn l -> externalise_link(conn, l) end)
   end
 
   #
@@ -53,25 +45,22 @@ defmodule ShortieWeb.PageController do
   #
 
   defp render_index(conn, params) do
-    # guarantee defaults for the template
-    # TODO: consider moving to context under a function named `empty` or similar?
-    params = Keyword.put_new(params, :changeset, Ecto.Changeset.cast(%Shortie.Links.Link{}, %{}, []))
+    # ensure that there is a changeset present for the form to render
+    params = Keyword.put_new(params, :changeset, Shortie.Links.Link.empty_changeset())
 
     render(conn, "index.html", params)
   end
 
   defp externalise_link(conn, %Shortie.Links.Link{ id: id, inserted_at: inserted_at, url: url }) do
-    external_id = external_id(id)
+    external_id = Shortie.Links.Link.external_id(id)
+    external_url = Routes.page_url(conn, :resolve, external_id)
 
     %{
       id: external_id,
       inserted_at: inserted_at,
-      page_url: external_url(conn, external_id),
+      page_url: external_url,
       target_url: url
     }
   end
-
-  defp external_id(link_id), do: Shortie.Links.Link.external_id(link_id)
-  defp external_url(conn, external_id), do: Routes.page_url(conn, :resolve, external_id)
 
 end
