@@ -27,6 +27,8 @@ function onCopyClick(e) {
     function() {
       self.classList.remove("copied");
       self.innerText = "COPY"
+
+      this.blur();
     },
     1500
   );
@@ -35,14 +37,9 @@ function onCopyClick(e) {
   var urlHref = urlInput.href;
 
   navigator.clipboard.writeText(urlHref);
-
-  // return selection states to normal
-  var selection = document.getSelection();
-  selection.removeAllRanges();
-  this.blur();
 }
 
 window.onload = function() {
   var copyButton = document.getElementById("saved-url-copy");
-  copyButton.onclick = onCopyClick;
+  if (copyButton) { copyButton.onclick = onCopyClick; }
 };

@@ -9,7 +9,7 @@ defmodule ShortieWeb.PageController do
   end
 
   def create(conn, params) do
-    case insert_link(params) do
+    case Shortie.Links.create_link(params["link"]) do
       {:error, changes} ->
         links = get_recent_links(conn)
         render_index(conn, changeset: changes, links: links)
@@ -21,7 +21,7 @@ defmodule ShortieWeb.PageController do
   end
 
   def resolve(conn, params) do
-    case resolve_link(params) do
+    case Shortie.Links.resolve_link(params["slug"]) do
       nil ->
         conn
         |> put_flash(:info, "Invalid link!")
@@ -32,28 +32,11 @@ defmodule ShortieWeb.PageController do
   end
 
   #
-  # Saving links
-  #
-
-  defp insert_link(params) do
-    params
-    |> params_to_link_changeset()
-    |> Shortie.Repo.insert()
-  end
-
-  defp params_to_link_changeset(params) do
-    Shortie.Link.changeset(
-      %Shortie.Link{},
-      Map.get(params, "link", %{})
-    )
-  end
-
-  #
   # Listing links
   #
 
   defp get_recent_links(conn) do
-    Shortie.Repo.get_recent_links()
+    Shortie.Links.list_recent_links()
     |> Enum.map(fn l -> %{ id: l.id, inserted_at: l.inserted_at, target_url: l.url } end)
     |> Enum.map(fn l -> add_page_url(conn, l) end)
   end
@@ -66,26 +49,18 @@ defmodule ShortieWeb.PageController do
   end
 
   #
-  # Resolving
-  #
-
-  defp resolve_link(params) do
-    internal_id = << "l_", params["slug"] :: binary >>
-    Shortie.Repo.get(Shortie.Link, internal_id)
-  end
-
-  #
   # Internals
   #
 
   defp render_index(conn, params) do
     # guarantee defaults for the template
-    params = Keyword.put_new(params, :changeset, Ecto.Changeset.cast(%Shortie.Link{}, %{}, []))
+    # TODO: consider moving to context under a function named `empty` or similar?
+    params = Keyword.put_new(params, :changeset, Ecto.Changeset.cast(%Shortie.Links.Link{}, %{}, []))
 
     render(conn, "index.html", params)
   end
 
-  defp externalise_link(conn, %Shortie.Link{ id: id, inserted_at: inserted_at, url: url }) do
+  defp externalise_link(conn, %Shortie.Links.Link{ id: id, inserted_at: inserted_at, url: url }) do
     external_id = external_id(id)
 
     %{
@@ -96,7 +71,7 @@ defmodule ShortieWeb.PageController do
     }
   end
 
-  defp external_id(link_id), do: Shortie.Link.external_id(link_id)
+  defp external_id(link_id), do: Shortie.Links.Link.external_id(link_id)
   defp external_url(conn, external_id), do: Routes.page_url(conn, :resolve, external_id)
 
 end

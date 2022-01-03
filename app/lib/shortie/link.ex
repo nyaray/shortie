@@ -1,4 +1,4 @@
-defmodule Shortie.Link do
+defmodule Shortie.Links.Link do
   use Ecto.Schema
 
   require Logger
@@ -7,14 +7,14 @@ defmodule Shortie.Link do
   import Ecto.Changeset
 
   @primary_key {:id, EctoHashids.Types.L, read_after_writes: true}
-  @min_length 11
-  @max_length 1024
 
-  def min_length(), do: @min_length
+  @max_length 1024
+  @host_pattern ~r/^((?!-)[A-Za-z0-9\-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$/
+
   def max_length(), do: @max_length
 
-  @declared_fields [:url]
 
+  @declared_fields [:url]
   schema "links" do
     field :url, :string
 
@@ -73,8 +73,6 @@ defmodule Shortie.Link do
       [host, port] -> {match_host_domain(changeset, field, host), port}
     end
   end
-
-  @host_pattern ~r/^((?!-)[A-Za-z0-9\-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$/
 
   require Logger
   defp match_host_domain(changeset, field, domain_candidate) do

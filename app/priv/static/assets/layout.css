@@ -24,16 +24,28 @@ pre{padding: 1em;}
   position: relative;
   width: 100%
 }
+
 select {
   width: auto;
+}
+
+/* Content blocks */
+
+.header-dev-mode > section > *,
+.shorties > h3,
+.shortie-item,
+.pitch {
+  padding: 0 20px;
+}
+
+.pitch .column {
+  padding: 0;
 }
 
 /* Hero pane */
 
 .hero {
   text-align: center;
-  border-bottom: 1px solid #e3e3e3;
-  background: #fcf8e3;
   border-radius: 6px;
   padding: 3em 3em 1em;
   margin-bottom: 3rem;
@@ -45,15 +57,13 @@ select {
 
 header {
   width: 100%;
-  background: #fdfdfd;
-  border-bottom: 1px solid #eaeaea;
   margin-bottom: 2rem;
 }
 
 header section {
   align-items: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
 }
 
@@ -73,14 +83,78 @@ header nav a {
   display: block;
 }
 
-@media (min-width: 40.0rem) { /* Small devices (landscape phones, 576px and up) */
+.hero
+.shortie-item,
+.business-card {
+  border-radius: 3px;
+}
+
+/* Shortie */
+
+.shortie-form-controls {
+  display: flex;
+  padding: 20px;
+}
+
+.shortie-form-controls input {
+  flex-grow: 1;
+}
+
+.shortie-form-controls button[type=submit] {
+  margin-left: 30px;
+}
+
+.shortie-form .card {
+  padding: 10px 20px 0;
+}
+
+.shortie-form .card .invalid-feedback {
+  display: list-item;
+  margin-left: 20px;
+}
+
+.shortie-item {
+  width: 100%;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.shortie-link,
+.shortie-target {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shortie-item > .shortie-creation {
+  float: right;
+}
+
+/* Footer */
+
+.pitch {
+  margin: 30px 0 30px;
+}
+
+.pitch p {
+  /* max-width: 400px; */
+  margin-right: 30px;
+}
+
+.business-card {
+  padding: 2rem;
+}
+
+@media (max-width: 40.0rem) { /* Small devices (landscape phones, 576px and up) */
 
   header section {
-    flex-direction: row;
+    flex-direction: column;
   }
 
-  header nav ul {
-    margin: 1rem;
+  .shortie-item > .shortie-creation {
+    text-align: inherit;
+    float: none;
   }
 
 }

@@ -34,83 +34,123 @@
   margin: -1rem 0 2rem;
 }
 
+/* Application */
+
+body {
+  color: #111;
+}
+
 #saved-url-copy.copied {
   background-color: #00d969;
 }
 
-/* Content blocks */
-
-.header-dev-mode > section > *,
-.shorties > h3,
-.shortie-item,
-.pitch {
-  padding: 0 20px;
+a {
+  color: #656D4A;
 }
 
-.pitch .column {
-  padding: 0;
+a:focus,
+a:hover {
+  color: #959c81;
 }
 
-/* Shortie */
-
-.shortie-form-controls {
-  display: flex;
-  padding: 20px;
+input[type=submit],
+button {
+  background-color: #656D4A;
+  border-color: #4c5042;
 }
 
-.shortie-form-controls input {
-  flex-grow: 1;
-}
+.hero {
+  background: #fcf8e3;
 
-.shortie-form-controls button[type=submit] {
-  margin-left: 30px;
-}
-
-.shortie-form .card {
-  padding: 10px 20px 0;
+  border-radius: 8px;
+  box-shadow: inset 3px 3px 0px 0px #888;
 }
 
 .shortie-form .save-error.card {
   background-color: #f2dede;
 }
 
-.shortie-form .card .invalid-feedback {
-  display: list-item;
-  margin-left: 20px;
-}
-
 .shortie-item {
-  width: 100%;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-
   background-color: #fcf8e3;
 }
 
-.shortie-link,
-.shortie-target {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.shortie-item > .shortie-creation {
-  float: right;
-}
-
-/* Footer */
-
-.pitch {
-  margin: 30px 0 30px;
-}
-
-.pitch p {
-  /* max-width: 400px; */
-  margin-right: 30px;
-}
-
 .business-card {
-  background-color: #d9edf7;
-  padding: 2rem;
+  color: #111111;
+  background-color: #e9ecce;
+}
+
+.business-card a {
+  color: #414833;
+}
+
+.business-card a:focus,
+.business-card a:hover {
+  color: #000000;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #666666;
+    /* color: #CB997E; */
+    color: #B7B7A4;
+  }
+
+  body .shortie-item,
+  body .hero {
+    background-color: #6B705C;
+  }
+
+  body a,
+  body button {
+    color: #FFE8D6;
+  }
+
+  body a:focus,
+  body a:hover {
+    color: #ffffff;
+  }
+
+  input[type=text] {
+    color: #dfdfc7;
+    border-color: #999999;
+    background-color: rgba(255, 255, 255, 0.041);
+  }
+
+  input[type=text]:hover,
+  input[type=text]:focus {
+    border-color: #ffffff;
+  }
+
+  input[type=submit],
+  button {
+    background-color: #6B705C;
+    color: #B7B7A4;
+  }
+
+  body .business-card {
+    color: #C2C5AA;
+    background-color: #3e4636;
+  }
+
+  body .business-card a {
+    color: #e9d3c3;
+  }
+
+  body .business-card a:hover,
+  body .business-card a:focus {
+    color: #ffffff;
+  }
+
+  /* Color reverse lookup key
+     
+      0123456789abcdef
+      fedcba9876543210
+  */
+
+  body .hero {
+    /* background-color: #0d207e; */
+    /* color:  */
+  }
+
 }

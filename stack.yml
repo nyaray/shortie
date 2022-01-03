@@ -2,6 +2,14 @@ version: '3'
 
 services:
 
+  proxy:
+    image: jwilder/nginx-proxy
+    network_mode: bridge
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
   db:
     image: postgres
     restart: always
@@ -10,20 +18,18 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
 
-  # dev
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8081:8080
-
   shortie:
     image: shortie
     restart: always
     ports:
       - 8080:4000
+    depends_on:
+      - db
+      - proxy
     links:
       - db
     environment:
       DATABASE_URL: ${DATABASE_URL}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      VIRTUAL_HOST: short.ie
+      VIRTUAL_PORT: 4000

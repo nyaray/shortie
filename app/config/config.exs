@@ -17,7 +17,8 @@ config :logger, :console,
 
 # Configures the endpoint
 config :shortie, ShortieWeb.Endpoint,
-  url: [host: "localhost"],
+  #url: [host: "localhost"],
+  url: [host: nil],
   render_errors: [view: ShortieWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Shortie.PubSub,
   live_view: [signing_salt: "avHgzkcf"]
@@ -35,7 +36,7 @@ config :ecto_hashids,
   characters: "0123456789abcdefghjkmnpqrstvwxyz",
   salt: "3acad842-06c2-48a3-9851-e2f5675ac901",
   prefix_descriptions: %{
-    l: Link
+    l: Links.Link
   }
 
 # Import environment specific config. This must remain at the bottom

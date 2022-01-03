@@ -11,23 +11,10 @@
 #   - https://pkgs.org/ - resource for finding needed packages
 #   - Ex: hexpm/elixir:1.13.1-erlang-24.2-debian-bullseye-20210902-slim
 #
-ARG BUILDER_IMAGE="hexpm/elixir:1.13.1-erlang-24.2-debian-bullseye-20210902-slim"
+ARG BUILDER_IMAGE="shortiebuilder"
 ARG RUNNER_IMAGE="shortierunner"
 
 FROM ${BUILDER_IMAGE} as builder
-
-# install build dependencies
-RUN apt-get update -y \
-    && apt-get install -y build-essential git \
-    && apt-get clean \
-    && rm -f /var/lib/apt/lists/*_*
-
-# prepare build dir
-WORKDIR /app
-
-# install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
 
 # set build ENV
 ENV MIX_ENV="prod"
@@ -67,7 +54,7 @@ RUN mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
-FROM ${RUNNER_IMAGE}
+FROM ${RUNNER_IMAGE} as runner
 
 WORKDIR "/app"
 RUN chown nobody /app

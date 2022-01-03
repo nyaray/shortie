@@ -12,8 +12,8 @@ set +o allexport
 docker stack deploy -c stack.yml shortie
 
 # Give the stack, primarily the database, some time to go up
-echo "Sleeping 5s to let database come up"
-sleep 5s
+echo "Sleeping a while to let database come up"
+sleep 10s
 
 # Create database, if needed.
 cd app

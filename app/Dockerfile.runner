@@ -1,6 +1,6 @@
 #   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20210902-slim - for the release image
 ARG RUNNER_IMAGE="debian:bullseye-20210902-slim"
-FROM ${RUNNER_IMAGE}
+FROM ${RUNNER_IMAGE} as runner
 
 RUN apt-get update -y \
   && apt-get install -y libstdc++6 openssl libncurses5 locales \
