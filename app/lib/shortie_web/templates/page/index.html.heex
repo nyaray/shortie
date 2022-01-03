@@ -21,7 +21,7 @@
       <%= if assigns[:saved_link] do %>
       <div class="save-success card">
         <h3>Saved!</h3>
-        <%= link to: (URI.parse(@saved_link.page_url)), id: "page_url", target: "_blank" do %><%= @saved_link.page_url %><% end %>
+        Your shortie was created: <%= link to: (URI.parse(@saved_link.page_url)), id: "page_url", target: "_blank" do %><%= @saved_link.page_url %><% end %>
         <button id="saved-url-copy">Copy</button>
       </div>
       <% end %>

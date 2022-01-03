@@ -43,7 +43,6 @@ defmodule Shortie.Links.Link do
 
   require Logger
 
-  # TODO: factor out ...?
   defp validate_url(%Changeset{} = changeset, field) do
     case get_field(changeset, field) do
       nil ->

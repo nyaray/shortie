@@ -29,7 +29,7 @@
   display: none;
 }
 .invalid-feedback {
-  color: #a94442;
+  color: #aa6a69;
   display: block;
   margin: -1rem 0 2rem;
 }
@@ -91,10 +91,17 @@ button {
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   body {
+    color: #d6d6bf;
     background-color: #666666;
-    /* color: #CB997E; */
-    color: #B7B7A4;
   }
+
+  .shortie-form .save-error.card {
+    background-color: #574242;
+  }
+
+  #saved-url-copy.copied {
+    background-color: #58703c;
+  }  
 
   body .shortie-item,
   body .hero {
