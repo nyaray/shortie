@@ -142,15 +142,4 @@ button {
     color: #ffffff;
   }
 
-  /* Color reverse lookup key
-     
-      0123456789abcdef
-      fedcba9876543210
-  */
-
-  body .hero {
-    /* background-color: #0d207e; */
-    /* color:  */
-  }
-
 }
