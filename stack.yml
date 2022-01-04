@@ -17,6 +17,8 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./docker-postgres/db/data:/var/lib/postgresql/data
 
   shortie:
     image: shortie
