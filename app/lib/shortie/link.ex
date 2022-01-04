@@ -44,54 +44,66 @@ defmodule Shortie.Links.Link do
   require Logger
 
   defp validate_url(%Changeset{} = changeset, field) do
-    case get_field(changeset, field) do
-      nil ->
-        changeset
-      field_value ->
-        {changeset, domain_etc} = check_protocol(changeset, field, field_value)
-        {changeset, port} = check_host_domain(changeset, field, domain_etc)
-        changeset = check_port(changeset, field, port)
+    url = get_field(changeset, field)
+    case URI.new(url) do
+      {:error, ":"} ->
+        add_error(changeset, field, "has an issue around the port, check that port is in 1-65535")
+      {:error, part} ->
+        add_error(changeset, field, "has an issue around: #{part}")
+      {:ok, %URI{ scheme: scheme, host: host, path: path}=uri} ->
+        case { scheme, host } do
+          { nil, nil } ->
+            # NOTE: URI assumes that a URL without a protocol is a path, but we
+            # can be a bit smarter if the "path" is a domain
+            host_candidate = path |> String.split(~r|[/#\?]|, parts: 2) |> List.first()
+            if String.match?(host_candidate, @host_pattern),
+              do: add_error(changeset, field, "has no protocol"),
+              else: add_error(changeset, field, "is malformed, it should contain at least a protocol (http/https) and a domain")
+          { nil, _host } ->
+            add_error(changeset, field, "has no protocol, it should begin with http:// or https://")
+          { _scheme, nil } ->
+            add_error(changeset, field, "has no domain")
+          { _scheme, _host } ->
+            do_validate_url(changeset, field, uri, url)
+        end
 
-        changeset
-    end
-
-  end
-
-  defp check_protocol(changeset, field, url_candidate) do
-    case url_candidate do
-      << "http://", rest :: binary >> -> {changeset, rest}
-      << "https://", rest :: binary >> -> {changeset, rest}
-      _ -> {add_error(changeset, field, "should begin with http:// or https://"), ""}
-    end
-  end
-
-  defp check_host_domain(changeset, field, host_candidate) do
-    host =
-      case String.split(host_candidate, "/", parts: 2) do
-        [host] -> host
-        [host, _path] -> host
-      end
-
-    case String.split(host, ":", parts: 2) do
-      [host] -> {match_host_domain(changeset, field, host), :no_port}
-      [host, port] -> {match_host_domain(changeset, field, host), port}
     end
   end
 
-  require Logger
-  defp match_host_domain(changeset, field, domain_candidate) do
-    if not String.match?(domain_candidate, @host_pattern),
-      do: add_error(changeset, field, "has invalid host"),
+  defp do_validate_url(changeset, field, %URI{ scheme: scheme, host: host } = uri, url) do
+    changeset = validate_userinfo_absence(changeset, field, uri)
+    changeset = validate_scheme(changeset, field, scheme)
+    changeset = validate_host(changeset, field, host)
+    changeset = validate_port(changeset, field, uri, url)
+
+    changeset
+  end
+
+  defp validate_userinfo_absence(changeset, _field, %URI{ userinfo: nil }), do: changeset
+  defp validate_userinfo_absence(changeset, field, %URI{ userinfo: _ }), do: add_error(changeset, field, "has userinfo, which is not allowed")
+
+  defp validate_scheme(changeset, field, scheme) do
+    if scheme in ["http", "https"],
+      do: changeset,
+      else: add_error(changeset, field, "should begin with http:// or https://")
+  end
+
+  defp validate_host(changeset, field, host) do
+    if not String.match?(host, @host_pattern),
+      do: add_error(changeset, field, "has invalid domain (host)"),
       else: changeset
   end
 
-  #(:[1-9][0-9]{0,4})?
-  defp check_port(changeset, _field, :no_port), do: changeset
-  defp check_port(changeset, field, port_candidate) do
-    case Integer.parse(port_candidate) do
-      {port_num, ""} when port_num in 1..65535-> changeset
-      _ -> add_error(changeset, field, "has invalid port, not in range 1..65535")
+  defp validate_port(changeset, field, %URI{ host: host, port: port}, url) do
+    with {:port_prefix, [_, post_host]} <- {:port_prefix, String.split(url, << host::binary, ":" >>, parts: 2)},
+          {:port_parse, {^port, ""}} <- {:port_parse, post_host |> String.split(~r|[/#\?]|, parts: 2) |> List.first() |> Integer.parse()} do
+      changeset
+    else
+      # no port specified in url
+      {:port_prefix, _} ->
+        changeset
+      {:port_parse, {_partial_port, string_rest}} ->
+        add_error(changeset, field, "has a malformed port around '%{port_rest}'", port_rest: string_rest)
     end
   end
-
 end
