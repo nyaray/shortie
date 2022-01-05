@@ -1,21 +1,51 @@
 # shortie
 
 The world-wide meme-economy is exploding: time is money and we need to save time
-on URLs, as we read them letter by letter to our friends over \<insert voice
-chat here\> when discussing which \<overhyped pyramid scheme instance\> to right
-click and `Save as` next.
+on URLs, as we read them letter by letter to our friends over voice chat.
 
 This is the world in which shortie was born.
 
 ## Requirements
 
-The instructions assume that you're running GNU/Linux, but macOS command
-equivalents should be easy to figure out.
-
-Running shortie doesn't require much!
+Running shortie doesn't require much! The instructions assume that you're
+running GNU/Linux, but macOS command equivalents should be easy to figure out.
 
 To run shortie, you need to have
-[Docker](https://www.docker.com/products/docker-desktop/alternatives) installed.
+[Docker](https://www.docker.com/products/docker-desktop/alternatives) installed,
+docker-engine will do, so don't worry about the slightly aggressive pitch from
+Docker.
+
+That's it, you're now ready to run `bootstrap.sh`! Go ahead, try it.
+
+## Bootstrapping Your Environment
+
+To prepare your environment for running shortie, having installed the
+dependencies, you need to:
+
+- Run `docker swarm init` , to create a local swarm where the shortie stack can be
+  deployed.
+- Run `bootstrap.sh` , to build docker images, setup the stack and seed the database.
+  - Stacks are either deployed and trying to keep their services running or not
+    existing, so the bootstrap script leaves a running environment behind if
+    everything goes well.
+  - Try running the bootstrap script again if it fails on the first try, docker
+    might not always be able to bring up the containers fast enough for
+    everything to go smoothly.
+
+## Running shortie
+
+- To access shortie locally, to get the full online-experience, run the following:
+  `echo "127.0.0.1 short.ie" | sudo tee -a /etc/hosts`
+  - If you don't want to use shortie in this way, you can change the
+    `VIRTUAL_HOST` environment variable for shortie in `stack.yml` to
+    `localhost` and connect to the application server by going to
+    http://localhost:8080 instead.
+
+To run shortie, run `./run.sh` from the project root-directory.
+
+Note that you might need to run `docker swarm init` to create a local swarm for
+running the Docker stack used by this project if you don't already have swarm
+set up.
 
 ### Permissions
 
@@ -103,33 +133,3 @@ various files are used for the following purposes:
   as starting points for its build and run stages, respectively.
   - The builder stage is used as a target when creating the seeding image,
     `shortieseeder:local`, which is used to seed the database.
-
-## Bootstrapping Your Environment
-
-To prepare your environment for running shortie, having installed the
-dependencies, you need to:
-
-- Run `docker swarm init` , to create a local swarm where the shortie stack can be
-  deployed.
-- Run `bootstrap.sh` , to build docker images, setup the stack and seed the database.
-  - Stacks are either deployed and trying to keep their services running or not
-    existing, so the bootstrap script leaves a running environment behind if
-    everything goes well.
-  - Try running the bootstrap script again if it fails on the first try, docker
-    might not always be able to bring up the containers fast enough for
-    everything to go smoothly.
-
-## Running shortie
-
-- To access shortie locally, to get the full online-experience, run the following:
-  `echo "127.0.0.1 short.ie" | sudo tee -a /etc/hosts`
-  - If you don't want to use shortie in this way, you can change the
-    `VIRTUAL_HOST` environment variable for shortie in `stack.yml` to
-    `localhost` and connect to the application server by going to
-    http://localhost:8080 instead.
-
-To run shortie, run `./run.sh` from the project root-directory.
-
-Note that you might need to run `docker swarm init` to create a local swarm for
-running the Docker stack used by this project if you don't already have swarm
-set up.
