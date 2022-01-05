@@ -8,6 +8,5 @@ set -o allexport
 . .env-prod
 set +o allexport
 
-# Build app image (`shortie`)
-docker image rm shortie:local
-docker build -t shortie:local ./app
+# Deploy the stack locally
+docker stack up -c stack.yml shortie

@@ -41,7 +41,7 @@ if config_env() == :prod do
       """
 
   # not my domain, but one can dream
-  host = System.get_env("PHX_HOST") || System.get_env("VIRTUAL_HOST") || "short.ie"
+  host = System.get_env("PHX_HOST") || System.get_env("VIRTUAL_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || System.get_env("VIRTUAL_PORT") || "4000")
 
   config :shortie, ShortieWeb.Endpoint,

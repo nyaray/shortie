@@ -95,6 +95,24 @@ button {
     background-color: #666666;
   }
 
+  .alert-info {
+    color: #0b4f6e;
+    background-color: #83afc5;
+    border-color: #bce8f1;
+  }
+
+  .alert-warning {
+    color: #695705;
+    background-color: #c4bd9a;
+    border-color: #faebcc;
+  }
+
+  .alert-danger {
+    color: #4d2929;
+    background-color: #aa8787;
+    border-color: #ebccd1;
+  }
+
   .shortie-form .save-error.card {
     background-color: #574242;
   }

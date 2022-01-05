@@ -14,9 +14,6 @@ import Config
 # Do not print debug messages in production
 config :logger, level: :info
 
-config :shortie, ShortieWeb.Endpoint,
-  url: [host: "short.ie", port: 80]
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

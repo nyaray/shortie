@@ -11,8 +11,8 @@
 #   - https://pkgs.org/ - resource for finding needed packages
 #   - Ex: hexpm/elixir:1.13.1-erlang-24.2-debian-bullseye-20210902-slim
 #
-ARG BUILDER_IMAGE="shortiebuilder"
-ARG RUNNER_IMAGE="shortierunner"
+ARG BUILDER_IMAGE="shortiebuilder:local"
+ARG RUNNER_IMAGE="shortierunner:local"
 
 FROM ${BUILDER_IMAGE} as builder
 
@@ -49,6 +49,8 @@ RUN mix compile
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
+FROM builder as releaser
+
 COPY rel rel
 RUN mix release
 
@@ -60,7 +62,7 @@ WORKDIR "/app"
 RUN chown nobody /app
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/prod/rel/shortie ./
+COPY --from=releaser --chown=nobody:root /app/_build/prod/rel/shortie ./
 
 USER nobody
 

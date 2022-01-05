@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
 
@@ -21,7 +21,7 @@ services:
       - ./docker-postgres/db/data:/var/lib/postgresql/data
 
   shortie:
-    image: shortie
+    image: shortie:local
     restart: always
     ports:
       - 8080:4000
@@ -35,3 +35,8 @@ services:
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       VIRTUAL_HOST: short.ie
       VIRTUAL_PORT: 4000
+
+networks:
+  default:
+    driver: overlay
+    attachable: true

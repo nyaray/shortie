@@ -53,7 +53,6 @@ defmodule Shortie.Links do
 
       iex> get_link!("l_uc39ah")
       %Link{}
-
   """
   def get_link!(id), do: Repo.get!(Link, id)
 
@@ -67,7 +66,12 @@ defmodule Shortie.Links do
   """
   def resolve_link(slug) do
     internal_id = << "l_", slug :: binary >>
-    Repo.get(Link, internal_id)
+    try do
+      Repo.get(Link, internal_id)
+    catch
+      :error, %Ecto.Query.CastError{ type: EctoHashids.Types.L } ->
+        nil
+    end
   end
 
   @doc """

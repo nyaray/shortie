@@ -5,7 +5,8 @@ defmodule ShortieWeb.PageController do
 
   def index(conn, _params) do
     links = get_recent_links(conn)
-    render_index(conn, links: links)
+    conn
+    |> render_index(links: links)
   end
 
   def create(conn, params) do
