@@ -32,6 +32,12 @@ defmodule ShortieWeb.PageController do
     end
   end
 
+  def redirect_404(conn, _params) do
+    conn
+    |> put_flash(:warn, "Page not found")
+    |> redirect(to: "/")
+  end
+
   #
   # Listing links
   #

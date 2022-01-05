@@ -38,6 +38,10 @@ defmodule ShortieWeb.Router do
     get "/:slug", PageController, :resolve
 
     post "/", PageController, :create
+
+    # Pokemon routes
+    get "/*path", PageController, :redirect_404
+    post "/*path", PageController, :redirect_404
   end
 
   # Other scopes may use custom stacks.

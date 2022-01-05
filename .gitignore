@@ -7,6 +7,9 @@ erl_crash.dump
 *.ez
 *.beam
 
+# docker data
+docker-postgres
+
 # secrets
 /config/*.secret.exs
 .env*

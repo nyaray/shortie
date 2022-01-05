@@ -8,50 +8,73 @@ defmodule Shortie.LinksTest do
 
     import Shortie.LinksFixtures
 
-    @invalid_attrs %{}
+    @invalid_attrs %{ "url" => "http://----" }
 
     test "list_links/0 returns all links" do
+      # arrange
       link = link_fixture()
-      assert Links.list_links() == [link]
+      # act
+      actual = Links.list_links()
+      # assert
+      assert actual == [link]
     end
 
     test "get_link!/1 returns the link with given id" do
+      # arrange
       link = link_fixture()
-      assert Links.get_link!(link.id) == link
+      # act
+      actual = Links.get_link!(link.id)
+      # assert
+      assert actual == link
     end
 
     test "create_link/1 with valid data creates a link" do
-      valid_attrs = %{}
+      # arrange
+      valid_attrs = %{ "url" => "http://elixir-lang.org" }
 
-      assert {:ok, %Link{} = link} = Links.create_link(valid_attrs)
+      # act
+      actual = Links.create_link(valid_attrs)
+
+      # assert
+      assert {:ok, %Link{} = link} = actual
+      assert link.url == "http://elixir-lang.org"
     end
 
     test "create_link/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Links.create_link(@invalid_attrs)
-    end
-
-    test "update_link/2 with valid data updates the link" do
-      link = link_fixture()
-      update_attrs = %{}
-
-      assert {:ok, %Link{} = link} = Links.update_link(link, update_attrs)
-    end
-
-    test "update_link/2 with invalid data returns error changeset" do
-      link = link_fixture()
-      assert {:error, %Ecto.Changeset{}} = Links.update_link(link, @invalid_attrs)
-      assert link == Links.get_link!(link.id)
+      # act
+      actual = Links.create_link(@invalid_attrs)
+      # assert
+      assert {:error, %Ecto.Changeset{}} = actual
     end
 
     test "delete_link/1 deletes the link" do
+      # arrange
       link = link_fixture()
-      assert {:ok, %Link{}} = Links.delete_link(link)
+      # act
+      actual = Links.delete_link(link)
+      # assert
+      assert {:ok, %Link{}} = actual
       assert_raise Ecto.NoResultsError, fn -> Links.get_link!(link.id) end
     end
 
-    test "change_link/1 returns a link changeset" do
+    test "resolve_link/1 resolves to a link given a slug" do
+      # arrange
       link = link_fixture()
-      assert %Ecto.Changeset{} = Links.change_link(link)
+      id = link.id |> Link.external_id()
+      # act
+      actual = Links.resolve_link(id)
+      # assert
+      assert link == actual
     end
+
+    test "resolve_link/1 handles non-existant slugs" do
+      # arrange
+      id = "not_really_real"
+      # act
+      actual = Links.resolve_link(id)
+      # assert
+      assert actual == nil
+    end
+
   end
 end

@@ -40,12 +40,12 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  # not my domain, but one can dream
-  host = System.get_env("PHX_HOST") || System.get_env("VIRTUAL_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || System.get_env("VIRTUAL_PORT") || "4000")
+  host = System.get_env("PHX_HOST") || System.get_env("VIRTUAL_HOST")
+  raw_port = System.get_env("PORT") || System.get_env("VIRTUAL_PORT") || "4000"
+  port = String.to_integer(raw_port)
 
   config :shortie, ShortieWeb.Endpoint,
-    url: [host: host, port: 80],#[host: host, port: 443],
+    url: [host: host, port: 80],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.

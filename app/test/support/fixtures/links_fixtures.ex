@@ -11,7 +11,7 @@ defmodule Shortie.LinksFixtures do
     {:ok, link} =
       attrs
       |> Enum.into(%{
-
+        "url" => "http://google.com"
       })
       |> Shortie.Links.create_link()
 
