@@ -133,4 +133,3 @@ To run shortie, run `./run.sh` from the project root-directory.
 Note that you might need to run `docker swarm init` to create a local swarm for
 running the Docker stack used by this project if you don't already have swarm
 set up.
-
