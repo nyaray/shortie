@@ -27,15 +27,22 @@ echo "Sleeping 15 seconds to let the postgres container start ..."
 
 sleep 15
 
+# expect/accept failures
+set +e
 docker exec -it $(docker ps -q -l -f name=shortie_db) pg_isready -t 0
 POSTGRES_STATUS=$?
+set -e
+
 RETRIES=5
 until [ $POSTGRES_STATUS -eq 0 ] || [ $RETRIES -eq 0 ]; do
   echo "Waiting for postgres container to become ready, $((RETRIES)) remaining attempts ..."
   RETRIES=$((RETRIES-=1)) 
 
+  # expect/accept failures
+  set +e
   docker exec -it $(docker ps -q -l -f name=shortie_db) pg_isready -t 0
   POSTGRES_STATUS=$?
+  set -e
 
   sleep 5
 done

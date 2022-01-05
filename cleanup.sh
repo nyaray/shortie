@@ -6,3 +6,7 @@ if [ $? -ne 0 ]; then
     echo "Removal of 'shortie' prefixed containers failed"
     echo "  TIP: Consider running stop.sh before trying to run this script again."
 fi
+
+docker rmi $(docker images --filter=reference="shortie*" -q)
+
+docker image prune

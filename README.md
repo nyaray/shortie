@@ -23,29 +23,40 @@ To prepare your environment for running shortie, having installed the
 dependencies, you need to:
 
 - Run `docker swarm init` , to create a local swarm where the shortie stack can be
-  deployed.
-- Run `bootstrap.sh` , to build docker images, setup the stack and seed the database.
+  deployed. Don't worry if you've already done this at some point, Docker will
+  tell you that you are in a swarm, which is fine.
+- Create an environment file with your connection strings and secrets and name
+  them `.env-dev` and `.env-prod`, respectively. They should look something like
+  this (with `$ENV` replaced by either `dev` or `prod`):
+
+      DATABASE_URL=ecto://postgres:postgres@db:5432/shortie_$ENV
+      SECRET_KEY_BASE=APg847Y5Gs+DPry6bC5Sq4TOX1/RerRYbn56CTxYzofn2uDTw9TN7Ly/Qk2PJk00
+      MIX_ENV=$ENV
+      VIRTUAL_HOST=short.ie
+  - You should generate your own secret key base, check out the development
+    description later in this document to see how to do that.
+- Run `bootstrap.sh` , to build docker images, setup the stack (the set of
+  containers used to run the app, database and reverse proxy which acts as a
+  gateway) as well as seeding the database.
   - Stacks are either deployed and trying to keep their services running or not
     existing, so the bootstrap script leaves a running environment behind if
     everything goes well.
   - Try running the bootstrap script again if it fails on the first try, docker
     might not always be able to bring up the containers fast enough for
     everything to go smoothly.
+  - The reverse proxy lets you add more services without reconfiguring too much,
+    new containers just need to have a `VIRTUAL_HOST` ENV variable to be picked
+    up automagically.
 
 ## Running shortie
 
-- To access shortie locally, to get the full online-experience, run the following:
+- To access shortie locally, while getting the full online-experience, run the following:
   `echo "127.0.0.1 short.ie" | sudo tee -a /etc/hosts`
   - If you don't want to use shortie in this way, you can change the
-    `VIRTUAL_HOST` environment variable for shortie in `stack.yml` to
-    `localhost` and connect to the application server by going to
-    http://localhost:8080 instead.
+    `VIRTUAL_HOST` environment variable for shortie to `localhost` and connect
+    to the application server by going to http://localhost instead.
 
 To run shortie, run `./run.sh` from the project root-directory.
-
-Note that you might need to run `docker swarm init` to create a local swarm for
-running the Docker stack used by this project if you don't already have swarm
-set up.
 
 ### Permissions
 
@@ -76,25 +87,17 @@ that you use a version manager, such as ASDF-VM to manage it, since it allows
 you to switch elixir version on a per-project basis. ASDF-VM can also handle
 other languages and some tools, check it out!
 
-The first thing you need to do is create an environment file with your
-connection strings and secrets and name them `.env-dev` and `.env-prod`,
-respectively. They should look something like this (with `$ENV` replaced by
-either `dev` or `prod`):
-
-    DATABASE_URL=ecto://postgres:postgres@db:5432/shortie_$ENV
-    SECRET_KEY_BASE=YOUR_BIG_SECRET_HERE
-    MIX_ENV=$ENV
-
 To generate your secret key base, run `mix phx.gen.secret` and copy/paste that
-value into the file, once per environment.
+value into the file, once per environment. I've provided one for your
+convenience, but it should not be used in production.
 
-Now you should be able to source the environment file you just created and fetch
+You should be able to source the `.env-dev` file you created earlier and fetch
 the dependencies, compile them and the application itself, in order to be able
 to run things and see that they work. It is a good idea to do each of the
 following in the specified order the first time you try out the
 code-test/test-code-run cycle, so that things are in place when they're needed.
 
-    . .env-$ENV
+    . .env-dev
     cd app
     mix deps.get
     mix deps.compile
@@ -116,7 +119,10 @@ stack locally, you can re-use the database container.
 
 ### Testing
 
-To run the tests, you can do `mix test`.
+To run the tests, you can do `mix test`. The following snippet relies on `watch`
+to re-run the tests whenever code or a test is changed.
+
+    (while true; do; watch -n1 -g 'git diff lib test | sha1sum' > /dev/null 2>&1 && if [ $? -eq 0 ]; then; echo "=== CHANGE DETECTED ==="; fi; done) | mix test --listen-on-stdin
 
 ### What's Up With the Docker Files
 
