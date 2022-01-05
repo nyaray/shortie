@@ -1,17 +1,42 @@
 # shortie
 
 The world-wide meme-economy is exploding: time is money and we need to save time
-on URLs, as we read them letter by letter to our friends over discord when
-discussing which NFT to right click and download next.
+on URLs, as we read them letter by letter to our friends over \<insert voice
+chat here\> when discussing which \<overhyped pyramid scheme instance\> to right
+click and `Save as` next.
 
 This is the world in which shortie was born.
 
 ## Requirements
 
+The instructions assume that you're running GNU/Linux, but macOS command
+equivalents should be easy to figure out.
+
 Running shortie doesn't require much!
 
 To run shortie, you need to have
 [Docker](https://www.docker.com/products/docker-desktop/alternatives) installed.
+
+### Permissions
+
+If you get errors about permissions when trying to run `bootstrap.sh` you might
+need to add yourself to the group that owns the docker daemon socket file. Use
+`ls -l <file>` on the file you're being denied access to in order to figure out
+which group owns the socket. Then add yourself to that group with
+
+    sudo usermod -a -G <groupname> <username>
+
+you probably also want to grant yourself
+read/write rights by running:
+
+    sudo chmod 660 <file>
+
+After this you either need to log out and back in again or to log in to the
+newly added group by running `newgrp docker`. Note that you *might* need to
+reboot for the change to take effect properly.
+
+You should now be able to use `docker ps` to see that you may communicate with
+the local docker service.
 
 ### Development
 
@@ -21,12 +46,43 @@ that you use a version manager, such as ASDF-VM to manage it, since it allows
 you to switch elixir version on a per-project basis. ASDF-VM can also handle
 other languages and some tools, check it out!
 
-Once you're ready to start working on shortie, `cd app`, to move into the
-application directory.  You can run `mix ecto.setup` against your stack's
-database instance as the task will default to the dev env and create a schema in
-the database. Once you've done that you can enjoy hot reloading and other
-niceties one get's by running `mix phx.server` to start the application in dev
-mode.
+The first thing you need to do is create an environment file with your
+connection strings and secrets and name them `.env-dev` and `.env-prod`,
+respectively. They should look something like this (with `$ENV` replaced by
+either `dev` or `prod`):
+
+    DATABASE_URL=ecto://postgres:postgres@db:5432/shortie_$ENV
+    SECRET_KEY_BASE=YOUR_BIG_SECRET_HERE
+    MIX_ENV=$ENV
+
+To generate your secret key base, run `mix phx.gen.secret` and copy/paste that
+value into the file, once per environment.
+
+Now you should be able to source the environment file you just created and fetch
+the dependencies, compile them and the application itself, in order to be able
+to run things and see that they work. It is a good idea to do each of the
+following in the specified order the first time you try out the
+code-test/test-code-run cycle, so that things are in place when they're needed.
+
+    . .env-$ENV
+    cd app
+    mix deps.get
+    mix deps.compile
+    mix compile
+    mix ecto.setup
+    mix test
+    mix phx.server
+
+You can run `mix ecto.setup` against your stack's database instance as the task
+will default to the dev env and create a schema in the database. Once you've
+done that you can enjoy hot reloading and other niceties one get's by running
+`mix phx.server` to start the application in dev mode.
+
+### Running in Development
+
+When developing shortie, it is cumbersome to deal with docker images, containers
+and the application stack if you're trying things out, but if you've deployed a
+stack locally, you can re-use the database container.
 
 ### Testing
 
@@ -53,9 +109,15 @@ various files are used for the following purposes:
 To prepare your environment for running shortie, having installed the
 dependencies, you need to:
 
-- Run `docker swarm init`, to create a local swarm where the shortie stack can be
+- Run `docker swarm init` , to create a local swarm where the shortie stack can be
   deployed.
-- Run `bootstrap.sh`, to build docker images, setup the stack and seed the database.
+- Run `bootstrap.sh` , to build docker images, setup the stack and seed the database.
+  - Stacks are either deployed and trying to keep their services running or not
+    existing, so the bootstrap script leaves a running environment behind if
+    everything goes well.
+  - Try running the bootstrap script again if it fails on the first try, docker
+    might not always be able to bring up the containers fast enough for
+    everything to go smoothly.
 
 ## Running shortie
 
@@ -72,8 +134,3 @@ Note that you might need to run `docker swarm init` to create a local swarm for
 running the Docker stack used by this project if you don't already have swarm
 set up.
 
-### Running in Development
-
-When developing shortie, it is cumbersome to deal with docker images, containers
-and the application stack if you're trying things out, but if you've deployed a
-stack locally, you can re-use the database container.

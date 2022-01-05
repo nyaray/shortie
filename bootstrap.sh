@@ -23,9 +23,9 @@ mkdir -p docker-postgres/db/data
 # Deploy application stack
 docker stack deploy -c stack.yml shortie
 
-echo "Sleeping 5 seconds to let the postgres container start ..."
+echo "Sleeping 15 seconds to let the postgres container start ..."
 
-sleep 10
+sleep 15
 
 docker exec -it $(docker ps -q -l -f name=shortie_db) pg_isready -t 0
 POSTGRES_STATUS=$?
