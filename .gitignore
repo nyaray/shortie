@@ -8,6 +8,7 @@ erl_crash.dump
 *.beam
 
 # docker data
+docker-build-test
 docker-postgres
 
 # secrets

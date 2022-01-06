@@ -20,6 +20,9 @@ docker build app -t shortie:local
 # Make directory to persist data across stack deployments
 mkdir -p docker-postgres/db/data
 
+# Make directory to store builds from within the test-runner container
+mkdir -p docker-build-test
+
 # Deploy application stack
 docker stack deploy -c stack.yml shortie
 

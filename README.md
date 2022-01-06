@@ -117,10 +117,15 @@ When developing shortie, it is cumbersome to deal with docker images, containers
 and the application stack if you're trying things out, but if you've deployed a
 stack locally, you can re-use the database container.
 
-### Testing
+## Testing
 
-To run the tests, you can do `mix test`. The following snippet relies on `watch`
-to re-run the tests whenever code or a test is changed.
+To run the tests in a container, call `test.sh`.
+
+### Testing in Your Host Environment
+
+To run the tests in your host environment, you can do `mix test`. The following
+snippet relies on `watch` to re-run the tests whenever code or a test is
+changed.
 
     (while true; do; watch -n1 -g 'git diff lib test | sha1sum' > /dev/null 2>&1 && if [ $? -eq 0 ]; then; echo "=== CHANGE DETECTED ==="; fi; done) | mix test --listen-on-stdin
 
@@ -139,3 +144,16 @@ various files are used for the following purposes:
   as starting points for its build and run stages, respectively.
   - The builder stage is used as a target when creating the seeding image,
     `shortieseeder:local`, which is used to seed the database.
+
+## Uninstalling
+
+If you, for whatever reason, want to remove the project and leave as few traces
+as possible behind, it should be enough to do the following:
+
+    # Remove the docker stack
+    ./stop.sh
+    # Check the output of this command to know when all the shortie containers
+    # have stopped: docker ps -a 
+
+    # Clean up any containers, images or other resources associated with shortie
+    ./cleanup.sh
