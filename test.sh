@@ -9,4 +9,4 @@ docker run \
     -e MIX_ENV=test \
     -e DATABASE_HOST=shortie_db \
     --mount type=bind,source="$(pwd)"/docker-build-test,target=/app/_build \
-    shortiebuilder:local mix test
+    shortiebuilder:local bash -c "mix deps.get && mix deps.compile && mix test"
